@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     APP_NAME: str = "NextBarber"
     DEBUG: bool = True
 
-    # Database
-    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/nextbarber"
+    # Database (SQLite para desarrollo, PostgreSQL para producción)
+    DATABASE_URL: str = "sqlite:///./nextbarber.db"
 
     # JWT
     SECRET_KEY: str = "tu-secret-key-super-segura-cambiar-en-produccion"

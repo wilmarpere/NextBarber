@@ -5,12 +5,12 @@ python-multipart==0.0.9
 
 # Base de datos
 sqlalchemy==2.0.35
-psycopg2-binary==2.9.9
+psycopg[binary]==3.2.3
 alembic==1.13.2
 
-# PostGIS / Geolocalización
-geoalchemy2==0.15.2
-shapely==2.0.6
+# PostGIS / Geolocalización (comentado hasta tener PostgreSQL)
+# geoalchemy2==0.15.2
+# shapely==2.0.6
 
 # Autenticación
 python-jose[cryptography]==3.3.0

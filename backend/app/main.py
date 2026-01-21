@@ -2,7 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.settings import settings
+from app.config.database import Base, engine
 from app.routes import auth, usuarios, barberias, servicios, citas, resenas, membresias, pagos, productos
+
+# Importar modelos para crear tablas
+from app.models import *
+
+# Crear tablas
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="NextBarber API",

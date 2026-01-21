@@ -1,9 +1,7 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Text, Boolean, DateTime, Enum, ForeignKey, Numeric, Table
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Text, Boolean, DateTime, Enum, ForeignKey, Numeric, Table, JSON
 from sqlalchemy.orm import relationship
-from geoalchemy2 import Geography
 import enum
 
 from app.config.database import Base
@@ -26,8 +24,8 @@ class PlanMembresia(str, enum.Enum):
 favoritos = Table(
     "favoritos",
     Base.metadata,
-    Column("usuario_id", UUID(as_uuid=True), ForeignKey("usuarios.id"), primary_key=True),
-    Column("barberia_id", UUID(as_uuid=True), ForeignKey("barberias.id"), primary_key=True),
+    Column("usuario_id", String(36), ForeignKey("usuarios.id"), primary_key=True),
+    Column("barberia_id", String(36), ForeignKey("barberias.id"), primary_key=True),
     Column("created_at", DateTime, default=datetime.utcnow)
 )
 
@@ -35,8 +33,8 @@ favoritos = Table(
 class Barberia(Base):
     __tablename__ = "barberias"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    propietario_id = Column(UUID(as_uuid=True), ForeignKey("usuarios.id"), nullable=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    propietario_id = Column(String(36), ForeignKey("usuarios.id"), nullable=False)
 
     # Información básica
     nombre = Column(String(150), nullable=False)
@@ -45,8 +43,7 @@ class Barberia(Base):
     telefono = Column(String(20), nullable=True)
     email = Column(String(255), nullable=True)
 
-    # Ubicación geográfica (PostGIS)
-    ubicacion = Column(Geography(geometry_type="POINT", srid=4326), nullable=True)
+    # Ubicación geográfica
     latitud = Column(Numeric(10, 8), nullable=True)
     longitud = Column(Numeric(11, 8), nullable=True)
 
@@ -54,7 +51,7 @@ class Barberia(Base):
     nit = Column(String(50), nullable=True)
 
     # Horarios (JSON: {"lunes": {"apertura": "08:00", "cierre": "20:00"}, ...})
-    horario = Column(JSONB, nullable=True)
+    horario = Column(JSON, nullable=True)
 
     # Estado y membresía
     estado = Column(Enum(EstadoBarberia), default=EstadoBarberia.PENDIENTE)
@@ -67,7 +64,7 @@ class Barberia(Base):
 
     # Imágenes
     logo_url = Column(String(500), nullable=True)
-    fotos = Column(JSONB, default=list)  # Lista de URLs de fotos
+    fotos = Column(JSON, default=list)
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
